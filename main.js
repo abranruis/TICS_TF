@@ -121,12 +121,12 @@ Promise.all([
   }).addTo(map);
 
   // Arboles BJ
-    L.geoJSON(data[3], {
+    L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
         var markerOptions = {
-          radius: 3,
-          fillColor: feature.properties.color || "#073600",
-          color: "#073600",
+          radius: 8,
+          fillColor: "#FF0000", // Color rojo para los árboles (puedes personalizarlo según tus preferencias)
+          color: "#000",
           weight: 1,
           opacity: 1,
           fillOpacity: 0.8
@@ -134,8 +134,8 @@ Promise.all([
         return L.circleMarker(latlng, markerOptions);
       },
       onEachFeature: function (feature, layer) {
-        if (feature.properties && feature.properties.name) {
-          layer.bindPopup(feature.properties.name);
+        if (feature.properties && feature.properties.ncomun) {
+          layer.bindPopup(feature.properties.ncomun);
         }
       }
     }).addTo(map);
