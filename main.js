@@ -72,9 +72,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Cargar archivos GeoJSON y agregar capas al mapa
 Promise.all([
-  fetch('DATA/Alcaldias_CDMX.geojson').then(response => response.json()),
-  fetch('DATA/ANP_CDMX.geojson').then(response => response.json()),
-  fetch('DATA/AreasVerdes_CDMX.geojson').then(response => response.json())
+  fetch('Alcaldias_CDMX.geojson').then(response => response.json()),
+  fetch('ANP_CDMX.geojson').then(response => response.json()),
+  fetch('AreasVerdes_CDMX.geojson').then(response => response.json())
 ]).then(function(data) {
   // Alcaldías CDMX
   L.geoJSON(data[0], {
