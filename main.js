@@ -74,7 +74,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 Promise.all([
   fetch('Alcaldias_CDMX.geojson').then(response => response.json()),
   fetch('ANP_CDMX.geojson').then(response => response.json()),
-  fetch('AreasVerdes_CDMX.geojson').then(response => response.json())
+  fetch('AreasVerdes_CDMX.geojson').then(response => response.json()),
+  fetch('ARBOLES_BJ.geojson').then(response => response.json())
 ]).then(function(data) {
   // Alcaldías CDMX
   L.geoJSON(data[0], {
@@ -118,4 +119,47 @@ Promise.all([
       layer.bindPopup(popupContent); // Mostrar nombre y categoría en pop-up
     }
   }).addTo(map);
+
+  // Arboles BJ
+    L.geoJSON(data[3], {
+      pointToLayer: function (feature, latlng) {
+        var markerOptions = {
+          radius: 3,
+          fillColor: feature.properties.color || "#073600",
+          color: "#073600",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        };
+        return L.circleMarker(latlng, markerOptions);
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(feature.properties.name);
+        }
+      }
+    }).addTo(map);
+        
 });
+
+/*fetch('ARBOLES_BJ.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      pointToLayer: function (feature, latlng) {
+        var markerOptions = {
+          radius: 3,
+          fillColor: feature.properties.color || "#073600",
+          color: "#073600",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        };
+        return L.circleMarker(latlng, markerOptions);
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(feature.properties.name);
+        }
+      }
+    }).addTo(map); */
