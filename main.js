@@ -128,7 +128,7 @@ fetch('ARBOLES_BJ.geojson')
       pointToLayer: function (feature, latlng) {
         var markerOptions = {
           radius: 8,
-          fillColor: "#FF0000", // Color rojo para los árboles (puedes personalizarlo según tus preferencias)
+          fillColor: "#2e5913", // Color verde para los árboles 
           color: "#000",
           weight: 1,
           opacity: 1,
