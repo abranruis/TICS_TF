@@ -62,65 +62,68 @@ fetch('DATA/AreasVerdes_CDMX.geojson')
       }
     }).addTo(map);
   }); */
-  // Crear mapa
-var map = L.map('map').setView([19.4326, -99.1332], 10); // Coordenadas de la Ciudad de México y nivel de zoom
+ // Crear el mapa
+var map = L.map('map').setView([19.4326, -99.1332], 10);
 
-// Agregar mapa base de OpenStreetMap
+// Añadir la capa de OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Cargar archivos GeoJSON y agregar capas al mapa
-Promise.all([
-  fetch('Alcaldias_CDMX.geojson').then(response => response.json()),
-  fetch('ANP_CDMX.geojson').then(response => response.json()),
-  fetch('AreasVerdes_CDMX.geojson').then(response => response.json()),
-  fetch('ARBOLES_BJ.geojson').then(response => response.json())
-]).then(function(data) {
-  // Alcaldías CDMX
-  L.geoJSON(data[0], {
-    style: function(feature) {
-      return {
-        fillColor: '#3D3D3D', // Color del contorno
-        fillOpacity: 0.25 // Grosor del contorno
-      };
-    },
-    onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.nomgeo); // Mostrar nombre en pop-up
-    }
-  }).addTo(map);
-
-  // Áreas Naturales Protegidas
-  L.geoJSON(data[1], {
-    style: function(feature) {
-      return {
-        fillColor: '#125B0D', // Color del relleno
-        fillOpacity: 0.5 // Opacidad del relleno
-      };
-    },
-    onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.nombre); // Mostrar nombre en pop-up
-    }
-  }).addTo(map);
-
-  // Áreas Verdes CDMX
-  L.geoJSON(data[2], {
-    style: function(feature) {
-      return {
-        fillColor: '#3FBD00', // Color del relleno
-        fillOpacity: 0.5 // Opacidad del relleno
-      };
-    },
-    onEachFeature: function(feature, layer) {
-      var popupContent = '<b>' + feature.properties.nombre + '</b><br>';
-      if (feature.properties.categoria_) {
-        popupContent += 'Categoría: ' + feature.properties.categoria_;
+// Cargar y visualizar los GeoJSON
+fetch('Alcaldias_CDMX.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: function () {
+        return {color: "#3D3D3D", fillOpacity: 0};
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.nomgeo) {
+          layer.bindPopup(feature.properties.nomgeo);
+        }
       }
-      layer.bindPopup(popupContent); // Mostrar nombre y categoría en pop-up
-    }
-  }).addTo(map);
+    }).addTo(map);
+  });
 
-  // Arboles BJ
+fetch('ANP_CDMX.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: function () {
+        return {color: "#125B0D", fillOpacity: 0.7};
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.nombre) {
+          layer.bindPopup(feature.properties.nombre);
+        }
+      }
+    }).addTo(map);
+  });
+
+fetch('AreasVerdes_CDMX.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: function () {
+        return {color: "#3FBD00", fillOpacity: 0.7};
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties) {
+          let popupContent = feature.properties.nombre || '';
+          if (feature.properties.categoria_) {
+            popupContent += `<br>${feature.properties.categoria_}`;
+          }
+          layer.bindPopup(popupContent);
+        }
+      }
+    }).addTo(map);
+  });
+
+// Cargar y visualizar los puntos GeoJSON con colores personalizados
+fetch('ARBOLES_BJ.geojson')
+  .then(response => response.json())
+  .then(data => {
     L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
         var markerOptions = {
@@ -139,8 +142,7 @@ Promise.all([
         }
       }
     }).addTo(map);
-        
-});
+  });
 
 /*fetch('ARBOLES_BJ.geojson')
   .then(response => response.json())
